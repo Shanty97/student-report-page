@@ -226,7 +226,7 @@ function addnewrow(e) {
     count = createSubjectMarkRow(count);
     liveCount.textContent = count;
     liveCount.classList.add('liveShow');
-    txt.textContent = 'Add one more'
+    txt.textContent = 'Add New Subject'
 
 }
 
@@ -350,7 +350,7 @@ function createSubjectMarkRow(count) {
     button2.id = 'addnewrow1'
 
     let buttonSpan2 = document.createElement('span')
-    buttonSpan2.textContent = 'Add new row'
+    buttonSpan2.textContent = 'Add New Subject'
     buttonSpan2.classList.add('pushup')
 
     let buttonLogo2 = document.createElement('img')
