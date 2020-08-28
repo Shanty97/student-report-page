@@ -4,6 +4,8 @@
 
 This is a single page student report portal for generating marklist of student. 
 
+![](https://github.com/Shanty97/student-report-page/blob/master/documentation/one.png?raw=true)
+
 ##  Features :
 
   - Dynamic addition & removal of subjects and respective marks
