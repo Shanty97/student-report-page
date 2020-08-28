@@ -1,102 +1,152 @@
-
 //Variable Declaration
 var removerow = document.querySelector('#removerow');
 var subjectMarkRoot = document.querySelector('#dynamicSection');
 var addnewrowbutton = document.getElementById('submarksrow');
 var txt = document.querySelector('#txt');
 var Studentform = document.querySelector('#studentData');
-
 var navBar = document.querySelector('.navBar');
-
 var submitformbutton = document.querySelector('#submitMarks');
+var resetMarks = document.querySelector('#resetMarks');
 var modalButtonClose = document.querySelector('#closeModal');
 var modalContainer = document.querySelector('#modal-container');
 var rootContainer = document.querySelector('#rootContainer');
-
 var tableRowRoot = document.querySelector('#dynamicTableRow');
-
 var insertGrade = document.querySelector('#insertGrade');
 var insertPercent = document.querySelector('#insertPercent');
 var insertRollno = document.querySelector('#studentRno');
 var insertName = document.querySelector('#studentName');
-
 var liveCount = document.querySelector('#liveCount');
+
 var count = 0;
+
+resetMarks.addEventListener('click', resetPage);
+function resetPage() {
+    location.reload();
+}
 
 //Submit Button
 submitformbutton.addEventListener('click', getFormData);
-
 function getFormData(e) {
     e.preventDefault();
     //console.log(Studentform)
-
     let fullname = document.querySelector('#fullname');
     let rollno = document.querySelector('#rollno');
     let subjects = document.querySelectorAll('.subjectData');
 
     let ofmarks = document.querySelectorAll('.outofMarksData');
     let obtmarks = document.querySelectorAll('.obtainedmarksData')
-
-    //Displaying fetched Data for testing
-    //console.log(fullname.value, rollno.value)
-    // subjects.forEach(function(s) {
-    //     console.log(s.value);
-    // })
-    // ofmarks.forEach(function(s) {
-    //     console.log(s.value);
-    // })
-    // obtmarks.forEach(function(s) {
-    //     console.log(s.value);
-    // })
+    console.log(subjects.length)
 
     if (performValidation(fullname, rollno, subjects, ofmarks, obtmarks) == true) {
+        console.log('validation done')
         rootContainer.classList.add('backgroundBlurOn');
+        //navBar.classList.add('backgroundBlurOn');
         generateResult(fullname, rollno, subjects, ofmarks, obtmarks);
     }
+
 }
 
 //Validation Check
 function performValidation(fullname, rollno, subjects, ofmarks, obtmarks) {
 
+    let validationDone = false;
     let one = 0;
     let two = 0;
     let three = 0;
+    let four = 0;
+    let five = 0;
+    let six = 0;
     //Fullname
     var check1 = /^[a-zA-Z]{2,15}(?: [a-zA-Z]+){1,15}$/gm;
     //Rollno
-    var check2 = /(COEP)([0-9]{4})$/;
+    var check2 = /(^[a-zA-Z]{4})([0-9]{4})$/;
     if (check1.test(fullname.value) === false) {
         alert("Enter only Alphabets as name.")
         fullname.value = '';
         one = 1;
         fullname.focus();
-        
+        return false;
+
     } else if (check2.test(rollno.value) == false) {
         alert("Enter as per Roll no. format")
         rollno.value = '';
         two = 1;
         rollno.focus();
-       
-    } else {
-        //Obtained marks
-        obtmarks.forEach(function(obm) {
-            //console.log(obm.parentElement.parentElement.previousElementSibling.firstChild.lastChild.value)
-            let outofmarks = obm.parentElement.parentElement.previousElementSibling.firstChild.lastChild.value;
-            if (obm.value > outofmarks) {
-                alert("Obtained marks exceeds the Out Of marks limit")
-                obm.value = ''
+        return false;
+
+    } else if (subjects.length === 0) {
+        alert('No subject is added.')
+        addnewrowbutton.click();
+        return false;
+
+    } else if (subjects.length > 0 && validationDone != true) {
+        subjects.forEach(function(s) {
+            console.log(s.value);
+            if (s.value === '') {
+                alert('Enter a valid subject')
+                s.focus();
                 three = 1;
-                obm.focus();
-         
+                return false;
             }
         })
-    }
+        if (three === 1) {
+            return false;
+        }
+        ofmarks.forEach(function(s) {
+            console.log(s.value);
+            if (s.value === '0') {
+                alert('Enter out of Marks')
+                s.focus();
+                five = 1;
+                return false;
+            }
+        })
+        if (five === 1) {
+            return false;
+        }
+        obtmarks.forEach(function(s) {
+            console.log(s.value);
+            if (s.value === '') {
+                alert('Enter obtained marks')
+                s.focus();
+                four = 1;
+                return false;
+            }
+        })
+        if (four === 1) {
+            return false;
+        }
+        obtmarks.forEach(function(obm) {
+            //console.log(obm.parentElement.parentElement.previousElementSibling.firstChild.lastChild.value)
+            let outofmarks = parseInt(obm.parentElement.parentElement.previousElementSibling.firstChild.lastChild.value);
+            console.log(obm.parentElement.parentElement.previousElementSibling.firstChild.lastChild.value)
+            console.log(obm.value)
+            if (parseInt(obm.value) > outofmarks) {
+                console.log('inside', typeof(obm.value), '-', typeof(outofmarks))
 
-    if (one == 1 || two == 1 || three == 1) {
-        return false
-    } else {
+                alert("Obtained marks exceeds the Out Of marks limit")
+                obm.value = ''
+
+                obm.focus();
+                six = 1;
+                return false;
+            }
+        })
+        if (six === 1) {
+            return false;
+        }
+        validationDone = true;
+
+    }
+    if (validationDone === true) {
         return true;
     }
+
+    // if (one == 1 || two == 1 || three == 1) {
+    //     return false
+    // } else {
+    //     return true;
+    // }
 
 
 }
@@ -109,12 +159,12 @@ function generateResult(fullname, rollno, subjects, ofmarks, obtmarks) {
     var totalObtMarks = 0;
     var totalPercent = 0;
     var finalGrade = '';
+    var failChecker = 0;
 
     modalContainer.classList.add('show');
-
-    if (tableRowRoot.childElementCount > 0) {
-        while (tableRowRoot.childElementCount > 1) {
-            //console.log(99)
+    if (tableRowRoot.hasChildNodes()) {
+        console.log('has child ?', tableRowRoot.hasChildNodes())
+        while (tableRowRoot.hasChildNodes()) {
             tableRowRoot.firstChild.remove();
         }
     }
@@ -149,6 +199,7 @@ function generateResult(fullname, rollno, subjects, ofmarks, obtmarks) {
             trow.style.background = 'red'
             trow.style.color = '#fff'
             tdata2.textContent = obtmarks[i].value + ' (F)';
+            failChecker++;
         }
 
         tableRowRoot.appendChild(trow);
@@ -160,23 +211,33 @@ function generateResult(fullname, rollno, subjects, ofmarks, obtmarks) {
     }
 
     //Grade Check
-    totalPercent = parseInt((totalObtMarks / totalOutOf) * 100);
-    if (totalPercent < 35) {
+
+    if (failChecker > 0) {
         finalGrade = 'Fail'
+        totalPercent = '---'
+    } else {
+        totalPercent = parseInt((totalObtMarks / totalOutOf) * 100);
+        if (totalPercent < 35) {
+            finalGrade = 'Fail'
 
-    } else if (totalPercent > 35 && totalPercent < 60) {
-        finalGrade = 'Pass'
-    } else if (totalPercent > 60 && totalPercent < 75) {
-        finalGrade = 'Pass (1st Class)'
-    } else if (totalPercent > 75) {
-        finalGrade = 'Pass (Distinction)'
+        } else if (totalPercent > 35 && totalPercent < 60) {
+            finalGrade = 'Pass'
+        } else if (totalPercent > 60 && totalPercent < 75) {
+            finalGrade = 'Pass (1st Class)'
+        } else if (totalPercent > 75) {
+            finalGrade = 'Pass (Distinction)'
 
+        }
     }
 
 
+
     //Percentage and final grade calculation
+
     let calculateRow = document.createElement('tr')
+    // calculateRow.classList.add('calculatedRow')
     let blankSubject = document.createElement('td')
+
     blankSubject.textContent = 'Total'
     blankSubject.style.fontWeight = 'bold'
     blankSubject.style.fontSize = '20px'
@@ -194,6 +255,8 @@ function generateResult(fullname, rollno, subjects, ofmarks, obtmarks) {
     let calculatePercent = document.createElement('td')
     calculatePercent.textContent = parseInt(totalPercent)
 
+
+
     //Attach Percentage and final grade calculation
     tableRowRoot.appendChild(calculateRow)
     calculateRow.appendChild(blankSubject)
@@ -201,7 +264,8 @@ function generateResult(fullname, rollno, subjects, ofmarks, obtmarks) {
     calculateRow.appendChild(calculateOutOf)
     insertRollno.textContent = rollno.value
     insertName.textContent = fullname.value
-    insertPercent.textContent = totalPercent + '%'
+    insertPercent.textContent = totalPercent
+    console.log(finalGrade)
     insertGrade.textContent = finalGrade
 
 
@@ -214,19 +278,20 @@ function generateResult(fullname, rollno, subjects, ofmarks, obtmarks) {
 modalButtonClose.addEventListener('click', function() {
     modalContainer.classList.remove('show');
     rootContainer.classList.remove('backgroundBlurOn');
-
-    location.reload();
+    //navBar.classList.remove('backgroundBlurOn');
+    //location.reload();
 })
 
 //Adding new row way-1
 addnewrowbutton.addEventListener('click', addnewrow);
+
 function addnewrow(e) {
     e.preventDefault();
     //console.log(111)
     count = createSubjectMarkRow(count);
     liveCount.textContent = count;
     liveCount.classList.add('liveShow');
-    txt.textContent = 'Add New Subject'
+    txt.textContent = 'Add one more'
 
 }
 
@@ -252,6 +317,7 @@ function createSubjectMarkRow(count) {
     subjectname.name = 'subject'
     subjectname.classList.add('formItem', 'subject', 'subjectData', 'borderIt')
     subjectname.placeholder = 'Enter Subject Name'
+
 
 
     //Attach Subject
@@ -350,7 +416,7 @@ function createSubjectMarkRow(count) {
     button2.id = 'addnewrow1'
 
     let buttonSpan2 = document.createElement('span')
-    buttonSpan2.textContent = 'Add New Subject'
+    buttonSpan2.textContent = 'Add new row'
     buttonSpan2.classList.add('pushup')
 
     let buttonLogo2 = document.createElement('img')
