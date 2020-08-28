@@ -422,7 +422,7 @@ function createSubjectMarkRow(count) {
     let buttonLogo2 = document.createElement('img')
     buttonLogo2.src = 'images/add.png'
     buttonLogo2.classList.add('logoimg');
-    //------------------------------------------------------------
+    //-----------------------------------------------------------
 
     //Attach Remove button and add new button
     row.appendChild(first3)
