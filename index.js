@@ -35,10 +35,10 @@ function getFormData(e) {
 
     let ofmarks = document.querySelectorAll('.outofMarksData');
     let obtmarks = document.querySelectorAll('.obtainedmarksData')
-    console.log(subjects.length)
+    //console.log(subjects.length)
 
     if (performValidation(fullname, rollno, subjects, ofmarks, obtmarks) == true) {
-        console.log('validation done')
+        //console.log('validation done')
         rootContainer.classList.add('backgroundBlurOn');
         //navBar.classList.add('backgroundBlurOn');
         generateResult(fullname, rollno, subjects, ofmarks, obtmarks);
@@ -81,7 +81,7 @@ function performValidation(fullname, rollno, subjects, ofmarks, obtmarks) {
 
     } else if (subjects.length > 0 && validationDone != true) {
         subjects.forEach(function(s) {
-            console.log(s.value);
+            //console.log(s.value);
             if (s.value === '') {
                 alert('Enter a valid subject')
                 s.focus();
@@ -93,7 +93,7 @@ function performValidation(fullname, rollno, subjects, ofmarks, obtmarks) {
             return false;
         }
         ofmarks.forEach(function(s) {
-            console.log(s.value);
+            //console.log(s.value);
             if (s.value === '0') {
                 alert('Enter out of Marks')
                 s.focus();
@@ -105,7 +105,7 @@ function performValidation(fullname, rollno, subjects, ofmarks, obtmarks) {
             return false;
         }
         obtmarks.forEach(function(s) {
-            console.log(s.value);
+            //console.log(s.value);
             if (s.value === '') {
                 alert('Enter obtained marks')
                 s.focus();
@@ -119,10 +119,10 @@ function performValidation(fullname, rollno, subjects, ofmarks, obtmarks) {
         obtmarks.forEach(function(obm) {
             //console.log(obm.parentElement.parentElement.previousElementSibling.firstChild.lastChild.value)
             let outofmarks = parseInt(obm.parentElement.parentElement.previousElementSibling.firstChild.lastChild.value);
-            console.log(obm.parentElement.parentElement.previousElementSibling.firstChild.lastChild.value)
-            console.log(obm.value)
+            //console.log(obm.parentElement.parentElement.previousElementSibling.firstChild.lastChild.value)
+            //console.log(obm.value)
             if (parseInt(obm.value) > outofmarks) {
-                console.log('inside', typeof(obm.value), '-', typeof(outofmarks))
+                //console.log('inside', typeof(obm.value), '-', typeof(outofmarks))
 
                 alert("Obtained marks exceeds the Out Of marks limit")
                 obm.value = ''
@@ -163,7 +163,7 @@ function generateResult(fullname, rollno, subjects, ofmarks, obtmarks) {
 
     modalContainer.classList.add('show');
     if (tableRowRoot.hasChildNodes()) {
-        console.log('has child ?', tableRowRoot.hasChildNodes())
+        //console.log('has child ?', tableRowRoot.hasChildNodes())
         while (tableRowRoot.hasChildNodes()) {
             tableRowRoot.firstChild.remove();
         }
@@ -265,7 +265,7 @@ function generateResult(fullname, rollno, subjects, ofmarks, obtmarks) {
     insertRollno.textContent = rollno.value
     insertName.textContent = fullname.value
     insertPercent.textContent = totalPercent
-    console.log(finalGrade)
+    //console.log(finalGrade)
     insertGrade.textContent = finalGrade
 
 
